@@ -1,10 +1,14 @@
 #include <iostream>
 #include "Tree.h"
 
-
-Node *Tree::search(Node *root, int val)
+Tree::Tree()
 {
-    Node *curr = root;
+    _root = nullptr;
+}
+
+Node *Tree::search(int val)
+{
+    Node *curr = _root;
     while (curr != nullptr)
     {
         if (val == curr->val)
@@ -13,17 +17,22 @@ Node *Tree::search(Node *root, int val)
         }
         else if (val > curr->val)
         {
-            curr = curr->right;
+            curr = curr->getRight();
         }
         else
         {
-            curr = curr->left;
+            curr = curr->getLeft();
         }
     }
     return curr;
 }
 
-Node *Tree::insert(Node *root, Node *x)
+void Tree::insert(Node *x)
+{
+    _root = insertRecur(_root, x);
+}
+
+Node *Tree::insertRecur(Node *root, Node *x)
 {
     if (root == nullptr)
     {
@@ -33,53 +42,65 @@ Node *Tree::insert(Node *root, Node *x)
     {
         if (x->val > root->val)
         {
-            root->right = Tree::insert(root->right, x);
-            root->right->parent = root;
+            root->setRight(insertRecur(root->getRight(), x), true);
         }
         else if (x->val < root->val)
         {
-            root->left = Tree::insert(root->left, x);
-            root->left->parent = root;
+            root->setLeft(insertRecur(root->getLeft(), x), true);
         }
     }
     return root;
 }
 
-bool Tree::remove(Node *root, int val)
+bool Tree::remove(int val)
+{
+    return removeRecur(_root, val);
+}
+
+bool Tree::removeRecur(Node *root, int val) // not super happy with this, but will work for now
 {   
     if (root != nullptr)
     {
         if (val == root->val)
         {
-            if (root->left != nullptr && root->right != nullptr)
+            Node *replacement = nullptr;
+
+            if (root->getLeft() != nullptr && root->getRight() != nullptr)
             {
-                Node *successor = Tree::inorderSuccessor(root->right);
-                Tree::remove(successor, successor->val);
-                successor->left = root->left;
-                successor->right = root->right;
-                Tree::swapChildren(root, successor); // might cause a whole-ass memory leak
+                replacement = inorderSuccessor(root) ;
+                removeRecur(replacement, replacement->val);
+                replacement->setLeft(root->getLeft(), true);
+                replacement->setRight(root->getRight(), true);
+                replacement->setParent(root->getParent(), root);
             }
-            else if (root->left != nullptr)
+            else if (root->getLeft() != nullptr || root->getRight() != nullptr)
             {
-                Tree::swapChildren(root, root->left);
-            }
-            else if (root->right != nullptr)
-            {
-                Tree::swapChildren(root, root->right);
+                replacement = root->getLeft() == nullptr ? root->getLeft() : root->getRight();
+                replacement->setParent(root->getParent(), root);
+
             }
             else
             {
-                Tree::swapChildren(root, nullptr);
+                if (root->getParent() != nullptr)
+                {
+                    root->getParent()->removeChild(root);
+                }
             }
+            
+            if (root == _root)
+            {
+                _root = replacement;
+            }
+
             return true;
         }
         else if (val < root->val)
         {
-            return Tree::remove(root->left, val);
+            return removeRecur(root->getLeft(), val);
         }
         else
         {
-            return Tree::remove(root->right, val);
+            return removeRecur(root->getRight(), val);
         }      
     }
     return false;
@@ -87,30 +108,68 @@ bool Tree::remove(Node *root, int val)
 
 Node *Tree::inorderSuccessor(Node *root)
 {
-    Node *curr = root;
-    while (curr->left != nullptr)
+    if (root->getRight() == nullptr)
     {
-        curr = curr->left;
+        return nullptr;
     }
-    return curr;
+    else
+    {
+        Node *curr = root->getRight();
+        while (curr->getLeft() != nullptr)
+        {
+            curr = curr->getLeft();
+        }
+        return curr;
+    }
+
 }
 
-void Tree::swapChildren(Node *root, Node *x)
+bool Tree::rotate(bool left)
 {
-    if (x != nullptr)
+    Node *replacement = left ? _root->getRight() : _root->getLeft();
+    bool result = rotate(_root, left);
+    if (result)
     {
-        x->parent = root->parent;
+        _root = replacement;
     }
+    return result;
+}
 
-    if (root->parent != nullptr)
+bool Tree::rotate(Node *root, bool left)
+{
+    Node *pivot;
+    Node *orphan;
+
+    if (left)
     {
-        if (root->parent->left == root)
+        if (root->getRight() != nullptr)
         {
-            root->parent->left = x;
+            pivot = root->getRight();
+            orphan =  pivot->getLeft();
+            pivot->setParent(root->getParent(), root);
+            pivot->setLeft(root, true);
+            root->setRight(orphan);
         }
         else
         {
-            root->parent->right = x;
+            return false;
         }
     }
+    else
+    {
+        if (root->getLeft() != nullptr)
+        {
+            pivot = root->getLeft();
+            orphan =  pivot->getRight();
+            pivot->setParent(root->getParent(), root);
+            pivot->setRight(root, true);
+            root->setLeft(orphan);
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    return true;
 }

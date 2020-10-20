@@ -4,26 +4,33 @@
 
 int main()
 {
-    Node root = Node(5);
     std::vector<Node> nodes;
-    for (int i = 0; i < 10; i++)
+    int values[7] = {3, 7, 1, 2, 0, 6, 9};
+    Tree bst;
+
+    for (int value: values)
     {
-        nodes.push_back(Node(i));
+        nodes.push_back(Node(value));
     }
-        for (int i = 0; i < 10; i++)
+    for (int i = 0; i < nodes.size(); i++)
     {
-        Tree::insert(&root, &nodes[i]);
+        bst.insert(&nodes[i]);
     }
-    std::cout << Tree::search(&root, 5)->val << std::endl;
+
+    std::cout << "Searching for 2" << std::endl;
+    std::cout << "Found: " << bst.search(2)->val << std::endl;
     std::cout << "Deleting 2" << std::endl;
-    Tree::remove(&root, 2);
-    if (Tree::search(&root, 2) != nullptr)
+    bst.remove(2);
+    if (bst.search(2) != nullptr)
     {
-        std::cout << "2 found, uh oh!" << std::endl;
+        std::cout << "2 still in tree, uh oh!" << std::endl;
     }
     else
     {
-        std::cout << "It worked! ";
-        std::cout << "Root left: " << root.left->val << std::endl;
+        std::cout << "It worked! " << std::endl;
     }
+    
+    bst.rotate(true);
+    bst.rotate(false);
+    std::cout << "All done!" << std::endl;
 }

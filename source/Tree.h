@@ -1,15 +1,30 @@
 #include "Node.h"
 
-namespace Tree 
+class Tree 
 {
-    Node *search(Node *root, int val);
-    Node *insert(Node *root, Node *x);
-    bool remove(Node *root, int val);
-    Node *inorderSuccessor(Node *root);
-    void swapChildren(Node *root, Node *x);
+    public:
+        Node *search(int val);
+        void insert(Node *x);
+        bool remove(int val);
+        bool rotate(bool left);
+        
+        static Node *inorderSuccessor(Node *root);
+        static bool rotate(Node *root, bool left);
+
+        Tree();
+
+    protected:
+        Node *_root;
+        bool removeRecur(Node *root, int val);
+        
+        static Node *insertRecur(Node *root, Node *x);
 };
 
-namespace RedBlackTree  
+class RedBlackTree: public Tree
 {
-    void restore(Node *x);
+    public:
+        RedBlackTree();
+
+    protected:
+        static void restore(Node *x);
 };
