@@ -19,12 +19,3 @@ class Tree
         
         static Node *insertRecur(Node *root, Node *x);
 };
-
-class RedBlackTree: public Tree
-{
-    public:
-        RedBlackTree();
-
-    protected:
-        static void restore(Node *x);
-};

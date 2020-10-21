@@ -6,25 +6,16 @@ class Node
         Node ();
         Node (int x);
 
-        Node *getLeft();
-        void setLeft(Node *x, bool reciprocal = false);
-        Node *getRight();
-        void setRight(Node *x, bool reciprocal = false);
-        Node *getParent();
-        void setParent(Node *x, Node *former = nullptr);
-        void removeChild(Node *child);
+        virtual Node *getLeft();
+        virtual void setLeft(Node *x, bool reciprocal = false);
+        virtual Node *getRight();
+        virtual void setRight(Node *x, bool reciprocal = false);
+        virtual Node *getParent();
+        virtual void setParent(Node *x, Node *former = nullptr);
+        virtual void removeChild(Node *child);
+
+        virtual ~Node() {};
     
     protected:
-        Node *_parent, *_left, *_right;
-        
-
-};
-
-class RedBlackNode: public Node
-{
-    public:
-        bool red;
-
-        RedBlackNode ();
-        RedBlackNode (int x, bool color);
+        Node *_parent, *_left, *_right;  
 };

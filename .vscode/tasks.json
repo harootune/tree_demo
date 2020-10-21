@@ -9,6 +9,7 @@
                 "source/main.cpp",
                 "source/Node.cpp",
                 "source/Tree.cpp",
+                "source/RedBlack.cpp",
                 "-o",
                 "${fileDirname}/tree_demo"
             ],

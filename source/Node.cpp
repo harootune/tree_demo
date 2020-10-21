@@ -1,12 +1,13 @@
 #include "Node.h"
 
-Node::Node ()
+
+Node::Node()
 {
     _parent = _left = _right = nullptr;
     val = 0;
 };
 
-Node::Node (int x)
+Node::Node(int x)
 {
     _parent = _left = _right = nullptr;
     val = x;
@@ -15,7 +16,7 @@ Node::Node (int x)
 Node *Node::getLeft()
 {
     return _left;
-}
+};
 
 void Node::setLeft(Node *x, bool reciprocal)
 {
@@ -25,12 +26,12 @@ void Node::setLeft(Node *x, bool reciprocal)
     {
         x->setParent(this);
     }
-}
+};
 
 Node *Node::getRight()
 {
     return _right;
-}
+};
 
 void Node::setRight(Node *x, bool reciprocal)
 {
@@ -40,12 +41,12 @@ void Node::setRight(Node *x, bool reciprocal)
     {
         x->setParent(this);
     }   
-}
+};
 
 Node *Node::getParent()
 {
     return _parent;
-}
+};
 
 void Node::setParent(Node *x, Node *former)
 {
@@ -67,7 +68,7 @@ void Node::setParent(Node *x, Node *former)
             return;
         }
     }
-}
+};
 
 void Node::removeChild(Node *x)
 {
@@ -84,19 +85,5 @@ void Node::removeChild(Node *x)
         //raise some error
         return;
     }
-}
-
-RedBlackNode::RedBlackNode ()
-{
-   _parent = _left = _right = nullptr;
-    val = 0;
-    red = true;
-}
-
-RedBlackNode::RedBlackNode (int x, bool color)
-{
-    _parent = _left = _right = nullptr;
-    val = x;
-    red = color;
 };
 

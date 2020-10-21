@@ -1,6 +1,6 @@
-#include <iostream>
 #include <vector>
-#include "Tree.h"
+#include <iostream>
+#include "RedBlack.h"
 
 int main()
 {
@@ -33,4 +33,7 @@ int main()
     bst.rotate(true);
     bst.rotate(false);
     std::cout << "All done!" << std::endl;
+
+    RedBlackNode rb = RedBlackNode(5, true);
+    RedBlackNode *left = rb.getRBLeft();
 }
