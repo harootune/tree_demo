@@ -3,10 +3,10 @@
 class Tree 
 {
     public:
-        Node *search(int val);
-        void insert(Node *x);
-        bool remove(int val);
-        bool rotate(bool left);
+        virtual Node *search(int val);
+        virtual bool insert(Node *x);
+        virtual Node *remove(int val);
+        virtual bool rotate(bool left);
         
         static Node *inorderSuccessor(Node *root);
         static bool rotate(Node *root, bool left);
@@ -15,7 +15,7 @@ class Tree
 
     protected:
         Node *_root;
-        bool removeRecur(Node *root, int val);
+        virtual Node *removeRecur(Node *root, int val);
         
-        static Node *insertRecur(Node *root, Node *x);
+        static Node *insertRecur(Node *root, Node *x, bool &success);
 };

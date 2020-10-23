@@ -27,47 +27,54 @@ Node *Tree::search(int val)
     return curr;
 }
 
-void Tree::insert(Node *x)
+bool Tree::insert(Node *x)
 {
-    _root = insertRecur(_root, x);
+    bool success;
+    _root = insertRecur(_root, x, success);
+    return success;
 }
 
-Node *Tree::insertRecur(Node *root, Node *x)
+Node *Tree::insertRecur(Node *root, Node *x, bool &success)
 {
     if (root == nullptr)
     {
+        success = true;
         return x;
     }
     else
     {
         if (x->val > root->val)
         {
-            root->setRight(insertRecur(root->getRight(), x), true);
+            root->setRight(insertRecur(root->getRight(), x, success), true);
         }
         else if (x->val < root->val)
         {
-            root->setLeft(insertRecur(root->getLeft(), x), true);
+            root->setLeft(insertRecur(root->getLeft(), x, success), true);
+        }
+        else
+        {
+            success = false;
         }
     }
     return root;
 }
 
-bool Tree::remove(int val)
+Node *Tree::remove(int val)
 {
     return removeRecur(_root, val);
 }
 
-bool Tree::removeRecur(Node *root, int val) // not super happy with this, but will work for now
+Node *Tree::removeRecur(Node *root, int val) // not super happy with this, but will work for now
 {   
+    Node *replacement = nullptr;
+
     if (root != nullptr)
     {
         if (val == root->val)
         {
-            Node *replacement = nullptr;
-
             if (root->getLeft() != nullptr && root->getRight() != nullptr)
             {
-                replacement = inorderSuccessor(root) ;
+                replacement = inorderSuccessor(root);
                 removeRecur(replacement, replacement->val);
                 replacement->setLeft(root->getLeft(), true);
                 replacement->setRight(root->getRight(), true);
@@ -91,19 +98,18 @@ bool Tree::removeRecur(Node *root, int val) // not super happy with this, but wi
             {
                 _root = replacement;
             }
-
-            return true;
         }
         else if (val < root->val)
         {
-            return removeRecur(root->getLeft(), val);
+            replacement = removeRecur(root->getLeft(), val);
         }
         else
         {
-            return removeRecur(root->getRight(), val);
+            replacement = removeRecur(root->getRight(), val);
         }      
     }
-    return false;
+
+    return replacement; // investigate this for rbtrees
 }
 
 Node *Tree::inorderSuccessor(Node *root)

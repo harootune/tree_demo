@@ -5,32 +5,31 @@ class RedBlackNode: public Node
     public:
         RedBlackNode();
         RedBlackNode(int x);
-        RedBlackNode(int x, bool red);
+        RedBlackNode(int x, int color);
 
         RedBlackNode *getRBLeft();
         RedBlackNode *getRBRight();
         RedBlackNode *getRBParent();
 
-        bool isRed();
-        void setRed(bool red);
+        int getColor();
+        void setColor(int color);
 
         ~RedBlackNode() {};
 
+        enum colors {red, black, doubleblack};
+
     protected:
-        bool _red;
+        int _color;
 };
 
-class RedBlackTree: protected Tree
+class RedBlackTree: public Tree
 {
     public:
         RedBlackTree();
 
-        RedBlackNode *search(int val);
-        void insert(RedBlackNode *x);
-        bool remove(int val);
+        bool insert(Node* x);
+        Node *remove(int val);
 
     protected:
-        RedBlackNode *_root;
-
         void restore(RedBlackNode *x);
 };
